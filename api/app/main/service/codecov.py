@@ -2,14 +2,24 @@ import requests
 
 
 class Codecov:
-    def get_repository_info(repo):
+    headers = {}
+
+    def get(url, params={}, headers=headers):
         try:
-            url = 'https://codecov.io/api/gh/' + repo.owner + '/' + repo.name
-
-            response = requests.get(url, timeout=3)
+            response = requests.get(url, headers=headers, params=params, timeout=3)
             response.raise_for_status()
-            return response.json()
-
+            result = response.json()
+            return result
         except requests.exceptions.RequestException as err:
             print(err)
             return None
+
+    def get_repository_info(repo):
+        url = 'https://codecov.io/api/gh/' + repo.owner + '/' + repo.name
+
+        return Codecov.get(url)
+        
+    def get_pull_requests(repo, params):
+        url = 'https://codecov.io/api/gh/' + repo.owner + '/' + repo.name + '/pulls'
+        response = Codecov.get(url, params)
+        return response['pulls']

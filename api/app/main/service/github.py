@@ -3,13 +3,14 @@ import requests
 
 class Github:
 
+    #@TODO Use variable for auth key
     headers = {
         'Authorization': 'token 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'
     }
 
-    def get(url):
+    def get(url, params={}, headers=headers):
         try:
-            response = requests.get(url, headers=Github.headers, timeout=3)
+            response = requests.get(url, headers=headers, params=params, timeout=3)
             response.raise_for_status()
             result = response.json()
             return result
@@ -25,7 +26,6 @@ class Github:
             'license': Github.get_license(repo),
             'main_language': Github.get_main_language(repo)
         }
-        print(info)
         return info
 
     def get_main_language(repo):
