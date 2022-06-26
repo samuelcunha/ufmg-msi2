@@ -7,6 +7,9 @@ from app.main.util.enum import RepositoryStatusEnum
 from app.main.model.repository import Repository
 from typing import Dict, Tuple
 from app.main.service.db import insert
+from app.main import db
+from datetime import date
+from sqlalchemy import func
 
 LIMIT = 50
 
@@ -46,14 +49,22 @@ def get_pending_repositories():
     return Repository.query.filter_by(status=RepositoryStatusEnum.PENDING).limit(LIMIT).all()
 
 
-def get_outdated_repositories():
-    return Repository.query.filter_by(status=RepositoryStatusEnum.PENDING).limit(LIMIT).all()
+def set_repositories_to_update():
+    now = date.today()
+    Repository.query.filter(func.date(Repository.updated) < now, Repository.status == RepositoryStatusEnum.SUCCESS).update({'status': RepositoryStatusEnum.PENDING}, synchronize_session='fetch')
+    db.session.commit()
 
 
 def find_repository_info(repo):
-    codecov_info = Codecov.get_repository_info(repo)
-    github_info = Github.get_repository_info(repo)
-    return save_repository_info(repo, codecov_info, github_info)
+    try:
+        codecov_info = Codecov.get_repository_info(repo)
+        github_info = Github.get_repository_info(repo)
+        return save_repository_info(repo, codecov_info, github_info)
+    except Exception as error:
+        print(error)
+        set_repository_with_error(repo, str(error))
+        return None
+        
 
 
 def save_repository_info(repo, codecov_info, github_info):
@@ -158,6 +169,20 @@ def set_repository_processed(repo):
         model=Repository,
         id=repo.id,
         data={
-            'status': RepositoryStatusEnum.SUCCESS
+            'status': RepositoryStatusEnum.SUCCESS,
+            'status_info': '',
+            'updated': date.today()
+        }
+    )
+    
+def set_repository_with_error(repo, error):
+
+    update(
+        model=Repository,
+        id=repo.id,
+        data={
+            'status': RepositoryStatusEnum.ERROR,
+            'status_info': error,
+            'updated': date.today()
         }
     )

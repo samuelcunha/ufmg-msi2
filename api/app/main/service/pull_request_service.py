@@ -46,12 +46,13 @@ def find_pull_requests(repo):
             coverage_base = pull_request['base']['totals']['c'] or 0
             if pull_request['head'] != None and pull_request['head']['totals']:
                 coverage_head = pull_request['head']['totals']['c'] or 0
-                data.append({
-                    'id': pull_request['pullid'],
-                    'repository_id': repo.id,
-                    'coverage_base': coverage_base,
-                    'coverage_head': coverage_head,
-                    'timestamp': pull_request['updatestamp']
-                })
+                if coverage_base and coverage_head:
+                    data.append({
+                        'id': pull_request['pullid'],
+                        'repository_id': repo.id,
+                        'coverage_base': coverage_base,
+                        'coverage_head': coverage_head,
+                        'timestamp': pull_request['updatestamp']
+                    })
     insert_ignore_many(PullRequest, data)
     return True

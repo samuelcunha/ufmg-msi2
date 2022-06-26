@@ -12,6 +12,7 @@ class LicenseEnum:
         'bsd-3-clause',
         'epl-2.0',
         'gpl-3.0',
+        'lgpl-3.0',
         'lgpl-2.1',
         'lgpl-3.0',
         'mit',

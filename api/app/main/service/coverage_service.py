@@ -5,7 +5,8 @@ from app.main.service.codecov import Codecov
 from app.main.service.github import Github
 from app.main.util.enum import RepositoryStatusEnum
 from app.main.model.repository import Repository
-from sqlalchemy import func, desc
+from app.main.model.pull_request import PullRequest
+from sqlalchemy import func, desc, cast, Integer
 
 from app.main import db
 
@@ -61,3 +62,12 @@ def get_one_by_owner(owner_name):
     ).group_by(Repository.owner
                ).first()
     return owner_coverage
+
+
+def get_pull_requests(repo):
+    pull_requests = PullRequest.query.filter(
+        PullRequest.repository_id == repo.id
+    ).order_by(desc(cast(PullRequest.id, Integer))
+               ).limit(25
+                       ).all()
+    return pull_requests[::-1]

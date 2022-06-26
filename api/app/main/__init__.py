@@ -19,6 +19,8 @@ scheduler = APScheduler()
 def create_app(config_name: str) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])
+    app.url_map.strict_slashes = False
+    
     db.init_app(app)
     flask_bcrypt.init_app(app)
 

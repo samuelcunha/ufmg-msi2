@@ -5,14 +5,11 @@ class Codecov:
     headers = {}
 
     def get(url, params={}, headers=headers):
-        try:
-            response = requests.get(url, headers=headers, params=params, timeout=3)
-            response.raise_for_status()
-            result = response.json()
-            return result
-        except requests.exceptions.RequestException as err:
-            print(err)
-            return None
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response.raise_for_status()
+        result = response.json()
+        return result
+
 
     def get_repository_info(repo):
         url = 'https://codecov.io/api/gh/' + repo.owner + '/' + repo.name

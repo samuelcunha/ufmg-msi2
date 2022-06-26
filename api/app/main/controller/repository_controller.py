@@ -9,7 +9,7 @@ api = RepositoryDto.api
 
 @api.route('')
 class RepositoryList(Resource):
-    @api.marshal_with(RepositoryDto.repository_list)
+    @api.marshal_with(RepositoryDto.repository_list, envelope='repositories')
     def get(self):
         """List all repositories"""
         return get_all_repositories()
@@ -25,7 +25,7 @@ class RepositoryList(Resource):
 @api.route('/<int:repo_id>')
 @api.response(404, 'Repository not found.')
 class Repository(Resource):
-    @api.marshal_with(RepositoryDto.repository_list)
+    @api.marshal_with(RepositoryDto.repository_list, envelope='repository')
     def get(self, repo_id):
         """Get a repository given its identifier"""
         repository = get_one_by_id(repo_id)
