@@ -26,6 +26,11 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://admin:NBE4N4F4MLD47EKQLCX4LZA7BP9TR8BG@msi2.czwrn2c96dz4.us-east-1.rds.amazonaws.com/coverage'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    ERROR_404_HELP = False
+    use_reloader=False
+    SCHEDULER_API_ENABLED = True
 
 config_by_name = dict(
     dev=DevelopmentConfig,

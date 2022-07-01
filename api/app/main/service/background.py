@@ -2,7 +2,7 @@ from app.main.service.pull_request_service import find_pull_requests
 from app.main.service.repository_service import find_repository_info, set_repositories_to_update, get_pending_repositories, set_repository_processed, set_repository_with_error
 from app.main import scheduler
 
-@scheduler.task('interval', id='do_job_1', seconds=30, misfire_grace_time=900)
+@scheduler.task('interval', id='do_job_1', seconds=60, misfire_grace_time=900)
 def job1():
     with scheduler.app.app_context():
         try:
