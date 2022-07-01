@@ -22,7 +22,7 @@ const pages = [
   },
   {
     name: "API",
-    link: process.env.REACT_APP_API_COVERIT,
+    link: `${process.env.REACT_APP_API_COVERIT}/v1`,
   },
 ];
 
