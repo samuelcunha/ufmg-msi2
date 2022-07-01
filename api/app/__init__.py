@@ -12,7 +12,7 @@ api = Api(
     blueprint,
     title='CoverIt API',
     version='1.0',
-    doc='/api',
+    doc='/v1',
 )
 
 api.add_namespace(repository_ns, path='/repository')
