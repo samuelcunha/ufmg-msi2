@@ -31,7 +31,7 @@ class CommitDto:
 
 class PullRequestDto:
     api = Namespace('Pull Request', decorators=[cors.crossdomain(origin="*")])
-    pull_request = api.model('pull_request', {
+    pull_request = api.model('PullRequest', {
         'id': fields.String(required=True, description='Pull request id'),
         'coverage_head': fields.Float(),
         'coverage_base': fields.Float(),
@@ -41,21 +41,28 @@ class PullRequestDto:
 
 class CoverageDto:
     api = Namespace('Coverage', description='Coverage info', decorators=[cors.crossdomain(origin="*")])
-    language_coverage = api.model('Repository', {
+    language_coverage = api.model('LanguageCoverage', {
         'language': fields.String(),
         'coverage': fields.Float(),
         'count': fields.Integer
     })
     
-    owner_coverage = api.model('Repository', {
+    owner_coverage = api.model('OwnerCoverage', {
         'owner': fields.String(),
         'coverage': fields.Float(),
         'count': fields.Integer
     })
     
-    repository_coverage = api.model('Repository', {
+    pull_request = api.model('PullRequest', {
+        'id': fields.String(required=True, description='Pull request id'),
+        'coverage_head': fields.Float(),
+        'coverage_base': fields.Float(),
+        'timestamp': fields.DateTime(),
+    })
+
+    repository_coverage = api.model('RepositoryCoverage', {
         'repository': fields.Nested(RepositoryDto.repository_list),
         'language': fields.Nested(language_coverage),
-        'pull_requests': fields.Nested(PullRequestDto.pull_request),
+        'pull_requests': fields.Nested(pull_request),
         'owner': fields.Nested(owner_coverage)
     })

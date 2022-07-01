@@ -1,5 +1,5 @@
 from flask_restx import Api
-from flask import Blueprint
+from flask import Blueprint, url_for
 from app.main.model.commit import Commit
 from app.main.model.pull_request import PullRequest
 
@@ -10,8 +10,9 @@ blueprint = Blueprint('api', __name__)
 
 api = Api(
     blueprint,
-    title='Coverage Analysis API',
+    title='CoverIt API',
     version='1.0',
+    doc='/api',
 )
 
 api.add_namespace(repository_ns, path='/repository')
