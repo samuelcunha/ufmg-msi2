@@ -15,6 +15,7 @@ class DevelopmentConfig(Config):
     ERROR_404_HELP = False
     use_reloader=False
     SCHEDULER_API_ENABLED = True
+    COVERIT_API_TOKEN='a4144a24-5af6-4b84-aaa9-b4b38fd23b72'
 
 
 class TestingConfig(Config):
@@ -23,6 +24,7 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'database_test.db')
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    COVERIT_API_TOKEN='51a4aa34-fb4a-4d5b-9301-cbfcc747e93b'
 
 class ProductionConfig(Config):
     DEBUG = False
@@ -31,6 +33,7 @@ class ProductionConfig(Config):
     ERROR_404_HELP = False
     use_reloader=False
     SCHEDULER_API_ENABLED = True
+    COVERIT_API_TOKEN='498ccc4d-2b81-4ebe-9322-540b4affb2f3'
 
 config_by_name = dict(
     dev=DevelopmentConfig,

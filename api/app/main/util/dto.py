@@ -53,6 +53,12 @@ class CoverageDto:
         'count': fields.Integer
     })
     
+    interval_coverage = api.model('IntervalCoverage', {
+        'interval': fields.String(),
+        'coverage': fields.Float(),
+        'count': fields.Integer
+    })
+    
     pull_request = api.model('PullRequest', {
         'id': fields.String(required=True, description='Pull request id'),
         'coverage_head': fields.Float(),

@@ -1,10 +1,11 @@
 from app.main.service.coverage_service import get_pull_requests
 from app.main.service.repository_service import get_one_by_id
 from app.main.util.dto import CoverageDto
-from app.main.service.coverage_service import get_one_by_language, get_all_by_language, get_all_by_owner, get_one_by_owner
+from app.main.service.coverage_service import get_one_by_language, get_all_by_language, get_all_by_owner, get_one_by_owner, get_all_by_interval
 from flask_restx import Resource
 
 api = CoverageDto.api
+
 
 @api.route('/language')
 class CoverageByLanguage(Resource):
@@ -38,6 +39,15 @@ class CoverageByOwner(Resource):
         return by_owner
 
 
+@api.route('/interval')
+class CoverageByInterval(Resource):
+    @api.marshal_with(CoverageDto.interval_coverage, envelope='intervals')
+    def get(self):
+        """Get average coverage for interval"""
+        by_interval = get_all_by_interval()
+        return by_interval
+
+
 @api.route('/owner/<owner>')
 class CoverageByOwnerName(Resource):
     @api.marshal_with(CoverageDto.owner_coverage, envelope='owner')
@@ -48,7 +58,8 @@ class CoverageByOwnerName(Resource):
             api.abort(404)
         else:
             return owner
-        
+
+
 @api.route('/repository/<int:id>')
 class CoverageInfoRepository(Resource):
     @api.marshal_with(CoverageDto.repository_coverage, envelope='repository')
@@ -60,7 +71,7 @@ class CoverageInfoRepository(Resource):
         owner = get_one_by_owner(repository.owner)
         language = get_one_by_language(repository.main_language)
         pull_requests = get_pull_requests(repository)
-        
+
         return {
             'repository': repository,
             'owner': owner,

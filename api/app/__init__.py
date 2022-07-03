@@ -7,12 +7,21 @@ from .main.controller.repository_controller import api as repository_ns
 from .main.controller.coverage_controller import api as coverage_ns
 
 blueprint = Blueprint('api', __name__)
+authorizations = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
 
 api = Api(
     blueprint,
     title='CoverIt API',
     version='1.0',
     doc='/v1',
+    authorizations=authorizations,
+    security='apikey'
 )
 
 api.add_namespace(repository_ns, path='/repository')

@@ -5,33 +5,8 @@ from typing import Dict, Tuple
 from app.main.service.db import insert, insert_ignore_many
 
 
-def insert_new_pull_request(data: Dict[str, str]) -> Tuple[Dict[str, str], int]:
-    pr = PullRequest.query.filter_by(id=data['id']).first()
-    if not pr:
-        new_pr = PullRequest(
-            id=data['id'],
-            repository_id=data['repository_id'],
-            coverage_base=data['coverage_base'],
-            coverage_head=data['coverage_head'],
-            timestamp=data['timestamp']
-        )
-        insert(new_pr)
-        response_object = {
-            'status': 'success',
-            'message': 'Successfully created.'
-        }
-        return response_object, 201
-    else:
-        response_object = {
-            'status': 'fail',
-            'message': 'Pull request already exists.',
-        }
-        return response_object, 409
-
-
 def get_by_repository(repo_id):
     return PullRequest.query.filter_by(repository_id=repo_id).all()
-
 
 
 def get_coverage(codecov_info):

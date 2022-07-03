@@ -1,5 +1,6 @@
 
 from sre_constants import SUCCESS
+from app.main.model.commit import Commit
 from app.main.service.db import update
 from app.main.service.codecov import Codecov
 from app.main.service.github import Github
@@ -62,6 +63,19 @@ def get_one_by_owner(owner_name):
     ).group_by(Repository.owner
                ).first()
     return owner_coverage
+
+
+def get_all_by_interval():
+    interval_coverage = db.session.query(
+        Commit.interval,
+        func.avg(Commit.coverage).label('coverage'),
+        func.count(Commit.interval).label('count')
+    ).filter(
+        Commit.branch.in_(['master', 'main'])
+    ).group_by(Commit.interval
+               ).order_by(Commit.timestamp
+                          ).all()
+    return interval_coverage
 
 
 def get_pull_requests(repo):

@@ -13,10 +13,19 @@ class Codecov:
 
     def get_repository_info(repo):
         url = 'https://codecov.io/api/gh/' + repo.owner + '/' + repo.name
-
-        return Codecov.get(url)
+        try:
+            response = Codecov.get(url)
+            return response
+        except requests.exceptions.RequestException as err:
+            print(err)
+            return None
         
     def get_pull_requests(repo, params):
         url = 'https://codecov.io/api/gh/' + repo.owner + '/' + repo.name + '/pulls'
         response = Codecov.get(url, params)
         return response['pulls']
+    
+    def get_commits(repo, params):
+        url = 'https://codecov.io/api/gh/' + repo.owner + '/' + repo.name + '/commits'
+        response = Codecov.get(url, params)
+        return response['commits']

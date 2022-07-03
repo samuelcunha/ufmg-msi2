@@ -109,6 +109,7 @@ const RepositoryView = () => {
           categories: pullRequests.map((pull) => pull.id),
           title: {
             text: "ID Pull Request",
+            offsetY: -15
           },
           labels: {
             rotateAlways: true,

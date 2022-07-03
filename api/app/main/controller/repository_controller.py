@@ -1,4 +1,5 @@
 from flask import request
+from app.main.util.decorator import token_required
 from flask_restx import Resource
 
 from ..util.dto import RepositoryDto
@@ -6,6 +7,7 @@ from ..service.repository_service import insert_new_repository, get_all_reposito
 from typing import Dict, Tuple
 
 api = RepositoryDto.api
+
 
 @api.route('')
 class RepositoryList(Resource):
@@ -15,6 +17,7 @@ class RepositoryList(Resource):
         return get_all_repositories()
 
     @api.expect(RepositoryDto.repository_add)
+    @token_required
     @api.response(201, 'Repository successfully created.')
     def post(self) -> Tuple[Dict[str, str], int]:
         """Creates a new Repository """
@@ -33,6 +36,3 @@ class Repository(Resource):
             api.abort(404)
         else:
             return repository
-
-
-
