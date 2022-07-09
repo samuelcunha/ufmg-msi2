@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/sh
 
 docker pull samuelcunha/react-nginx:latest
 docker pull samuelcunha/flask-api:latest
