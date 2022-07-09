@@ -1,0 +1,8 @@
+[
+    {
+      "id": "redeploy",
+      "execute-command": "/home/ubuntu/ufmg-msi2/scripts/redeploy.sh",
+      "command-working-directory": "/home/ubuntu/ufmg-msi2",
+      "response-message": "Redeploying aplication."
+    }
+  ]
