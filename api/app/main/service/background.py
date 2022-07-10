@@ -9,7 +9,6 @@ def job1():
     with scheduler.app.app_context():
         try:
             process()
-            db.session.expire_all()
         except Exception as err:
             print("Process error: ", err)
 

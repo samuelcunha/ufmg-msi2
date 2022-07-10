@@ -10,7 +10,13 @@ from flask_apscheduler import APScheduler
 import os
 
 
-db = SQLAlchemy()
+class CustomSQLAlchemy(SQLAlchemy):
+    def apply_driver_hacks(self, app, info, options):
+        if "isolation_level" not in options:
+            options["isolation_level"] = "READ COMMITTED"
+            return super(CustomSQLAlchemy, self).apply_driver_hacks(app, info, options)
+
+db = CustomSQLAlchemy()
 flask_bcrypt = Bcrypt()
 
 scheduler = APScheduler()
