@@ -1,8 +1,7 @@
 
-from app.main.service.codecov import Codecov
+from app.main.api.codecov import Codecov
 from app.main.model.pull_request import PullRequest
-from typing import Dict, Tuple
-from app.main.service.db import insert, insert_ignore_many
+from app.main.service.db import insert_ignore_many
 
 
 def get_by_repository(repo_id):

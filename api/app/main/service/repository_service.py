@@ -1,8 +1,8 @@
 
 from app.main.util.enum import LicenseEnum
 from app.main.service.db import update
-from app.main.service.codecov import Codecov
-from app.main.service.github import Github
+from app.main.api.codecov import Codecov
+from app.main.api.github import Github
 from app.main.util.enum import RepositoryStatusEnum
 from app.main.model.repository import Repository
 from typing import Dict, Tuple
@@ -10,9 +10,9 @@ from app.main.service.db import insert
 from app.main import db
 from datetime import date
 from sqlalchemy import func
+import os
 
-LIMIT = 50
-
+LIMIT = os.getenv('COVERIT_API_SYNC_ITEMS_PER_RUN', 50)
 
 def insert_new_repository(data: Dict[str, str]) -> Tuple[Dict[str, str], int]:
     repository = Repository.query.filter_by(

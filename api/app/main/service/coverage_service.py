@@ -1,9 +1,5 @@
 
-from sre_constants import SUCCESS
 from app.main.model.commit import Commit
-from app.main.service.db import update
-from app.main.service.codecov import Codecov
-from app.main.service.github import Github
 from app.main.util.enum import RepositoryStatusEnum
 from app.main.model.repository import Repository
 from app.main.model.pull_request import PullRequest

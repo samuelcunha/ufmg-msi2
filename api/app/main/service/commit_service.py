@@ -1,6 +1,5 @@
 
-from pprint import pprint
-from app.main.service.codecov import Codecov
+from app.main.api.codecov import Codecov
 from app.main.model.commit import Commit
 from app.main.service.db import insert_ignore_many
 import datetime

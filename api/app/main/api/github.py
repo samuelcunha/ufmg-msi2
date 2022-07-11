@@ -1,11 +1,9 @@
 import requests
-
+import os
 
 class Github:
-
-    # @TODO Use variable for auth key
     headers = {
-        'Authorization': 'token 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'
+        'Authorization': 'token ' + os.getenv('GITHUB_API_TOKEN')
     }
 
     def get(url, params={}, headers=headers):

@@ -1,3 +1,0 @@
-class APIRateLimitExceededException(Exception):
-    pass
-

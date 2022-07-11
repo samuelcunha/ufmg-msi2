@@ -1,10 +1,7 @@
-
-from app.main.util.enum import RepositoryStatusEnum
 from .. import db
 from sqlalchemy.sql import func
 
-from sqlalchemy import Column, ForeignKey, Integer, Table
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
 
 
 class PullRequest(db.Model):

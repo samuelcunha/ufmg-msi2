@@ -1,3 +1,6 @@
+include .env
+export
+
 .ONESHELL:
 
 .PHONY: clean install tests run all

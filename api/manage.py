@@ -6,9 +6,9 @@ from flask_script import Manager
 
 from app import blueprint
 from app.main import create_app, db
-from app.main.service import background
+from app.main.service import background_service
 
-app = create_app(os.getenv('COVERIT_API_ENV') or 'dev')
+app = create_app(os.getenv('COVERIT_API_ENV', 'dev'))
 app.register_blueprint(blueprint)
 
 app.app_context().push()
