@@ -8,7 +8,7 @@ from app.main.model.repository import Repository
 from typing import Dict, Tuple
 from app.main.service.db import insert
 from app.main import db
-from datetime import datetime
+from datetime import datetime, date
 from sqlalchemy import func
 import os
 
@@ -51,8 +51,8 @@ def get_pending_repositories():
 
 
 def set_repositories_to_update():
-    now = datetime.now()
-    Repository.query.filter(func.date(Repository.updated) < now, Repository.status == RepositoryStatusEnum.SUCCESS).update(
+    today = date.today()
+    Repository.query.filter(func.date(Repository.updated) < today, Repository.status == RepositoryStatusEnum.SUCCESS).update(
         {'status': RepositoryStatusEnum.PENDING}, synchronize_session='fetch')
     db.session.commit()
 
