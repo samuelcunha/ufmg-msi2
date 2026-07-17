@@ -9,17 +9,17 @@ def get_by_repository(repo_id):
 
 
 def get_coverage(codecov_info):
-    return codecov_info.get('commit', {}).get('totals', {}).get('c', 0)
+    return (codecov_info.get('totals') or {}).get('coverage', 0) or 0
 
 
 def find_pull_requests(repo):
-    pull_requests = Codecov.get_pull_requests(repo, params={'state': 'merged', 'limit':'30'})
+    pull_requests = Codecov.get_pull_requests(repo, params={'state': 'merged', 'page_size': 30})
     data=[]
     for pull_request in pull_requests:
-        if pull_request['base'] != None and pull_request['base']['totals']:
-            coverage_base = pull_request['base']['totals']['c'] or 0
-            if pull_request['head'] != None and pull_request['head']['totals']:
-                coverage_head = pull_request['head']['totals']['c'] or 0
+        if pull_request['base_totals']:
+            coverage_base = pull_request['base_totals']['coverage'] or 0
+            if pull_request['head_totals']:
+                coverage_head = pull_request['head_totals']['coverage'] or 0
                 if coverage_base and coverage_head:
                     data.append({
                         'id': pull_request['pullid'],
