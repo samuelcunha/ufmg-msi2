@@ -1,0 +1,7 @@
+# Deploy SSH key (private half) — never commit
+.deploy_key
+.deploy_key.pub
+
+# OS / editor
+.DS_Store
+.history

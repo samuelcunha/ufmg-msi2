@@ -69,7 +69,7 @@ def get_all_by_interval():
     ).filter(
         Commit.branch.in_(['master', 'main'])
     ).group_by(Commit.interval
-               ).order_by(Commit.timestamp
+               ).order_by(func.min(Commit.timestamp)
                           ).all()
     return interval_coverage
 

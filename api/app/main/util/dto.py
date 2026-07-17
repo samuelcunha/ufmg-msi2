@@ -20,7 +20,14 @@ class RepositoryDto:
         'owner': fields.String(required=True),
         'origin': fields.String(required=True, example='codecov')
     })
-    
+    repository_paginated = api.model('RepositoryPaginated', {
+        'repositories': fields.List(fields.Nested(repository_list)),
+        'total': fields.Integer(),
+        'page': fields.Integer(),
+        'page_size': fields.Integer(),
+        'pages': fields.Integer()
+    })
+
     
 class CommitDto:
     api = Namespace('Commit', decorators=[cors.crossdomain(origin="*")])

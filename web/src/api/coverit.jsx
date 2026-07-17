@@ -1,8 +1,14 @@
 import axios from "axios";
 
-const axiosConfig = {
-    location: process.env.REACT_APP_API_COVERIT
-};
+const publicApiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export default axios.create({
-    baseURL: axiosConfig.location,
+  baseURL: publicApiUrl,
 });
+
+export function getServerClient() {
+  const internalApiUrl = process.env.API_INTERNAL_URL || publicApiUrl;
+  return axios.create({
+    baseURL: internalApiUrl,
+  });
+}

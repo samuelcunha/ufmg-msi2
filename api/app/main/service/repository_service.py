@@ -38,8 +38,14 @@ def insert_new_repository(data: Dict[str, str]) -> Tuple[Dict[str, str], int]:
         return response_object, 409
 
 
-def get_all_repositories():
-    return Repository.query.all()
+def get_all_repositories(page=1, page_size=20, search=None):
+    query = Repository.query
+    if search:
+        term = '%' + search + '%'
+        query = query.filter(
+            db.or_(Repository.name.ilike(term), Repository.owner.ilike(term))
+        )
+    return query.order_by(Repository.id).paginate(page=page, per_page=page_size, error_out=False)
 
 
 def get_one_by_id(id):
@@ -86,7 +92,7 @@ def save_repository_info(repo, codecov_info, github_info):
         id=repo.id,
         data={
             'coverage': get_coverage(codecov_info),
-            'main_language': codecov_info['repo']['language'] or github_info['main_language'],
+            'main_language': codecov_info['language'] or github_info['main_language'],
             'license': github_info['license'],
             'status_info': ""
         }
@@ -95,7 +101,7 @@ def save_repository_info(repo, codecov_info, github_info):
 
 
 def validate_active(repo, codecov_info):
-    if not codecov_info or not codecov_info.get('repo') or codecov_info['repo']['active'] is False:
+    if not codecov_info or codecov_info.get('active') is False:
         set_repository_with_error(repo, "Repositório não encontrado")
         return False
     return True
@@ -121,14 +127,14 @@ def validate_license(repo, github_info):
 
 
 def validate_language(repo, codecov_info, github_info):
-    if not codecov_info.get('repo') or (not codecov_info['repo']['language'] and not github_info['main_language']):
+    if not codecov_info.get('language') and not github_info['main_language']:
         set_repository_with_error(repo, "Linguagem principal não encontrada")
         return False
     return True
 
 
 def get_coverage(codecov_info):
-    return codecov_info.get('commit', {}).get('totals', {}).get('c', 0)
+    return (codecov_info.get('totals') or {}).get('coverage', 0) or 0
 
 
 def set_repository_processed(repo):

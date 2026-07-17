@@ -1,28 +1,26 @@
-import { makeStyles } from "@mui/styles";
-
-const useCommonStyles = makeStyles((theme) => ({
+const commonStyles = {
   colorTextCompleted: {
-    color: theme.palette.success.main,
+    color: "success.main",
   },
   colorTextInprocess: {
-    color: theme.palette.warning.main,
+    color: "warning.main",
   },
   colorTextNew: {
-    color: theme.palette.warning.main,
+    color: "warning.main",
   },
   colorTextError: {
-    color: theme.palette.error.main,
+    color: "error.main",
   },
   chipHigh: {
-    backgroundColor: theme.palette.error.main,
+    backgroundColor: "error.main",
     color: "#fff",
   },
   chipMedium: {
-    backgroundColor: theme.palette.info.main,
+    backgroundColor: "info.main",
     color: "#fff",
   },
   chipLow: {
-    backgroundColor: theme.palette.warning.main,
+    backgroundColor: "warning.main",
     color: "#fff",
   },
   textCapitalize: {
@@ -38,6 +36,8 @@ const useCommonStyles = makeStyles((theme) => ({
     height: "100vh",
     width: "100vw",
   },
-}));
+};
+
+const useCommonStyles = () => commonStyles;
 
 export default useCommonStyles;

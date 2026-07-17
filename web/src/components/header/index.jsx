@@ -10,24 +10,30 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const pages = [
   {
     name: "Início",
-    link: "/home",
+    link: "/",
+    internal: true,
   },
   {
     name: "Repositórios",
     link: "/repositories",
+    internal: true,
   },
   {
     name: "API",
-    link: `${process.env.REACT_APP_API_COVERIT}v1`,
+    link: `${process.env.NEXT_PUBLIC_API_URL}v1`,
+    internal: false,
   },
 ];
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const router = useRouter();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,12 +43,12 @@ const Header = () => {
     setAnchorElNav(null);
   };
 
-  const navigate = (route) => {
-    console.log(route);
-    if (route[0] === "/") {
-      window.location.pathname = route;
+  const navigate = (page) => {
+    handleCloseNavMenu();
+    if (page.internal) {
+      router.push(page.link);
     } else {
-      window.location.href = route;
+      window.location.href = page.link;
     }
   };
 
@@ -54,7 +60,7 @@ const Header = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component={Link}
             href="/"
             sx={{
               mr: 2,
@@ -99,11 +105,7 @@ const Header = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem
-                  href={page.link}
-                  key={page.link}
-                  onClick={() => navigate(page.link) && handleCloseNavMenu()}
-                >
+                <MenuItem key={page.link} onClick={() => navigate(page)}>
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
@@ -113,8 +115,8 @@ const Header = () => {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href=""
+            component={Link}
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -131,9 +133,9 @@ const Header = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
+                component={page.internal ? Link : "a"}
                 href={page.link}
                 key={page.link}
-                onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page.name}
