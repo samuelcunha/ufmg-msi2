@@ -1,11 +1,14 @@
 from app.main.service.commit_service import find_commits
 from app.main.service.pull_request_service import find_pull_requests
-from app.main.service.repository_service import find_repository_info, set_repositories_to_update, get_pending_repositories, set_repository_processed, set_repository_with_error
-from app.main import scheduler
+from app.main.service.repository_service import find_repository_info, set_repositories_to_update, get_pending_repositories, get_one_by_id, set_repository_processed, set_repository_with_error
+from app.main import scheduler, db
+from concurrent.futures import ThreadPoolExecutor
+from flask import current_app
 import os
 
 update_interval = os.getenv('COVERIT_API_SYNC_SECONDS_INTERVAL', 120)
 update_interval = int(update_interval)
+sync_max_workers = int(os.getenv('COVERIT_API_SYNC_MAX_WORKERS', 10))
 @scheduler.task('interval', id='do_job_1', seconds=update_interval, misfire_grace_time=900)
 def job1():
     with scheduler.app.app_context():
@@ -32,8 +35,16 @@ def process():
 
 
 def process_new_repositories(new_repos):
+    repo_ids = [repo.id for repo in new_repos]
+    app = current_app._get_current_object()
 
-    for repo in new_repos:
+    with ThreadPoolExecutor(max_workers=sync_max_workers) as executor:
+        list(executor.map(lambda repo_id: process_repository(app, repo_id), repo_ids))
+
+
+def process_repository(app, repo_id):
+    with app.app_context():
+        repo = get_one_by_id(repo_id)
         try:
             print("Processing: ", repo.name)
             if find_repository_info(repo):
@@ -43,3 +54,5 @@ def process_new_repositories(new_repos):
         except Exception as error:
             set_repository_with_error(repo, str(error))
             print("Repository error: ", error)
+        finally:
+            db.session.remove()

@@ -8,13 +8,33 @@ from typing import Dict, Tuple
 
 api = RepositoryDto.api
 
+MAX_PAGE_SIZE = 100
+
 
 @api.route('')
 class RepositoryList(Resource):
-    @api.marshal_with(RepositoryDto.repository_list, envelope='repositories')
+    @api.doc(params={
+        'page': 'Page number (default 1)',
+        'page_size': 'Items per page, max 100 (default 20)',
+        'search': 'Filter by owner or name (substring match)'
+    })
+    @api.marshal_with(RepositoryDto.repository_paginated)
     def get(self):
-        """List all repositories"""
-        return get_all_repositories()
+        """List all repositories (paginated)"""
+        page = request.args.get('page', 1, type=int)
+        page_size = request.args.get('page_size', 20, type=int)
+        search = request.args.get('search', None, type=str)
+        page_size = min(max(page_size, 1), MAX_PAGE_SIZE)
+        page = max(page, 1)
+
+        pagination = get_all_repositories(page=page, page_size=page_size, search=search)
+        return {
+            'repositories': pagination.items,
+            'total': pagination.total,
+            'page': page,
+            'page_size': page_size,
+            'pages': pagination.pages
+        }
 
     @api.expect(RepositoryDto.repository_add)
     @token_required
