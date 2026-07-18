@@ -11,7 +11,6 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const pages = [
   {
@@ -33,7 +32,6 @@ const pages = [
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const router = useRouter();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,15 +39,6 @@ const Header = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const navigate = (page) => {
-    handleCloseNavMenu();
-    if (page.internal) {
-      router.push(page.link);
-    } else {
-      window.location.href = page.link;
-    }
   };
 
   return (
@@ -105,8 +94,13 @@ const Header = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.link} onClick={() => navigate(page)}>
-                  <Typography textAlign="center">{page.name}</Typography>
+                <MenuItem
+                  key={page.link}
+                  component={page.internal ? Link : "a"}
+                  href={page.link}
+                  onClick={handleCloseNavMenu}
+                >
+                  <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>

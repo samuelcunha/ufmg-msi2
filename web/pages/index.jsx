@@ -32,13 +32,7 @@ const ChartLoader = () => (
 );
 
 const ChartTitle = ({ title, description }) => (
-  <Grid
-    container
-    item
-    xs={12}
-    alignItems="center"
-    style={{ width: "fit-content" }}
-  >
+  <Grid container sx={{ alignItems: "center" }} style={{ width: "fit-content" }} size={12}>
     <h2 style={{ marginRight: 4 }}>{title}</h2>
     <Tooltip title={description}>
       <IconButton size="small">
@@ -228,18 +222,23 @@ const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
   const [ownersRendered, setOwnersRendered] = React.useState(false);
   const [intervalsRendered, setIntervalsRendered] = React.useState(false);
 
-  const goToLanguage = (language) =>
-    language && router.push(`/repositories?language=${encodeURIComponent(language)}`);
-  const goToOwner = (owner) =>
-    owner && router.push(`/repositories?owner=${encodeURIComponent(owner)}`);
+  const goToLanguage = React.useCallback(
+    (language) =>
+      language && router.push(`/repositories?language=${encodeURIComponent(language)}`),
+    [router]
+  );
+  const goToOwner = React.useCallback(
+    (owner) => owner && router.push(`/repositories?owner=${encodeURIComponent(owner)}`),
+    [router]
+  );
 
   const languagesChart = React.useMemo(
     () => buildLanguagesChart(initialLanguages, () => setLanguagesRendered(true), goToLanguage),
-    [initialLanguages]
+    [initialLanguages, goToLanguage]
   );
   const ownersChart = React.useMemo(
     () => buildOwnersChart(initialOwners, () => setOwnersRendered(true), goToOwner),
-    [initialOwners]
+    [initialOwners, goToOwner]
   );
   const intervalsChart = React.useMemo(
     () => buildIntervalsChart(initialIntervals, () => setIntervalsRendered(true)),
@@ -247,18 +246,26 @@ const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
   );
 
   return (
-    <Box mx={2}>
+    <Box sx={{
+      mx: 2
+    }}>
       <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Paper>
-            <Box mx={2} py={1}>
+            <Box
+              sx={{
+                mx: 2,
+                py: 1
+              }}>
               {languagesRendered && (
                 <>
                   <ChartTitle
                     title="Cobertura por linguagem"
                     description="Média de cobertura de testes por linguagem principal dos repositórios processados com sucesso. Cada barra é a média simples da cobertura (%) entre os repositórios daquela linguagem; só entram linguagens com mais de 1 repositório cadastrado, para evitar amostras de tamanho 1."
                   />
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     Clique em uma barra para ver os repositórios dessa linguagem.
                   </Typography>
                 </>
@@ -285,16 +292,22 @@ const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
         </Grid>
       </Grid>
       <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Paper>
-            <Box mx={2} py={1}>
+            <Box
+              sx={{
+                mx: 2,
+                py: 1
+              }}>
               {ownersRendered && (
                 <>
                   <ChartTitle
                     title="Cobertura por proprietário"
                     description="Média de cobertura de testes agrupada pelo dono/organização do repositório no GitHub. Cada barra é a média simples da cobertura (%) de todos os repositórios cadastrados daquele proprietário, incluindo proprietários com um único repositório."
                   />
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     Clique em uma barra para ver os repositórios desse proprietário.
                   </Typography>
                 </>
@@ -321,9 +334,13 @@ const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Paper>
-            <Box mx={2} py={1}>
+            <Box
+              sx={{
+                mx: 2,
+                py: 1
+              }}>
               {intervalsRendered && (
                 <ChartTitle
                   title="Cobertura por intervalo"

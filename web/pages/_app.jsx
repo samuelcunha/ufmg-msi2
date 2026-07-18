@@ -26,7 +26,9 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <StyledEngineProvider injectFirst>
-          <Box mt={12}>
+          <Box sx={{
+            mt: 12
+          }}>
             <Header />
             <Component {...pageProps} />
           </Box>

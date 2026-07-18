@@ -22,13 +22,7 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 });
 
 const ChartTitle = ({ title, description }) => (
-  <Grid
-    container
-    item
-    xs={12}
-    alignItems="center"
-    style={{ width: "fit-content" }}
-  >
+  <Grid container sx={{ alignItems: "center" }} style={{ width: "fit-content" }} size={12}>
     <h2 style={{ marginRight: 4 }}>{title}</h2>
     <Tooltip title={description}>
       <IconButton size="small">
@@ -205,18 +199,25 @@ const RepositoryView = ({ repository }) => {
   };
 
   return (
-    <Box mx={2}>
+    <Box sx={{
+      mx: 2
+    }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} m={0}>
+        <Grid size={12} sx={{
+          m: 0
+        }}>
           <Paper>
-            <Box mx={2} py={1}>
+            <Box
+              sx={{
+                mx: 2,
+                py: 1
+              }}>
               <Stack direction="row">
                 <h2
-                  pb={2}
-                  style={{ marginRight: 10 }}
+                  style={{ marginRight: 10, paddingBottom: 16 }}
                 >{`${repository.repository.owner}/${repository.repository.name}`}</h2>
                 <Tooltip title="Abrir no GitHub">
-                  <IconButton p={0} onClick={openOnGitHub}>
+                  <IconButton sx={{ p: 0 }} onClick={openOnGitHub}>
                     <Avatar
                       alt="GitHub"
                       src="/github.png"
@@ -225,7 +226,7 @@ const RepositoryView = ({ repository }) => {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Abrir no CodeCov">
-                  <IconButton p={0} onClick={openOnCodeCov}>
+                  <IconButton sx={{ p: 0 }} onClick={openOnCodeCov}>
                     <Avatar
                       alt="Codecov"
                       src="/codecov.png"
@@ -238,24 +239,29 @@ const RepositoryView = ({ repository }) => {
           </Paper>
         </Grid>
         <Grid
-          item
-          xs={12}
-          sm={12}
-          md={
-            repository.repository.status === RepositoryStatusEnum.SUCCESS
+          size={{
+            xs: 12,
+            sm: 12,
+
+            md: repository.repository.status === RepositoryStatusEnum.SUCCESS
               ? 7
               : 12
-          }
-        >
+          }}>
           <Paper>
-            <Box mx={2} py={1}>
-              <Grid container item xs={12}>
-                <h2 pb={2}>Detalhes</h2>
+            <Box
+              sx={{
+                mx: 2,
+                py: 1
+              }}>
+              <Grid container size={12}>
+                <h2 style={{ paddingBottom: 16 }}>Detalhes</h2>
               </Grid>
               {repository.repository.status ===
                 RepositoryStatusEnum.SUCCESS && (
                 <Box>
-                  <Grid item mb={2}>
+                  <Grid sx={{
+                    mb: 2
+                  }}>
                     <Typography component="span" sx={commonStyles.bold}>
                       Cobertura:{" "}
                     </Typography>
@@ -267,8 +273,14 @@ const RepositoryView = ({ repository }) => {
               )}
 
               <Box>
-                <Grid item mb={2}>
-                  <Typography component="span" mb={2} sx={commonStyles.bold}>
+                <Grid sx={{
+                  mb: 2
+                }}>
+                  <Typography
+                    component="span"
+                    sx={[{
+                      mb: 2
+                    }, commonStyles.bold]}>
                     Status:{" "}
                   </Typography>
                   <Typography component="span">
@@ -276,8 +288,14 @@ const RepositoryView = ({ repository }) => {
                   </Typography>
                 </Grid>
                 {repository.repository.status_info && (
-                  <Grid item mb={2}>
-                    <Typography component="span" mb={2} sx={commonStyles.bold}>
+                  <Grid sx={{
+                    mb: 2
+                  }}>
+                    <Typography
+                      component="span"
+                      sx={[{
+                        mb: 2
+                      }, commonStyles.bold]}>
                       Mensagem:{" "}
                     </Typography>
                     <Typography component="span">
@@ -285,8 +303,12 @@ const RepositoryView = ({ repository }) => {
                     </Typography>
                   </Grid>
                 )}
-                <Grid item>
-                  <Typography component="span" mb={2} sx={commonStyles.bold}>
+                <Grid>
+                  <Typography
+                    component="span"
+                    sx={[{
+                      mb: 2
+                    }, commonStyles.bold]}>
                     Última Atualização:{" "}
                   </Typography>
                   <Typography component="span">
@@ -294,21 +316,38 @@ const RepositoryView = ({ repository }) => {
                   </Typography>
                 </Grid>
               </Box>
-              <Box mb={2}></Box>
+              <Box sx={{
+                mb: 2
+              }}></Box>
             </Box>
           </Paper>
         </Grid>
 
         {repository.repository.status === RepositoryStatusEnum.SUCCESS && (
-          <Grid container item xs={12} sm={12} md={5} spacing={2}>
-            <Grid item xs={12}>
+          <Grid
+            container
+            spacing={2}
+            size={{
+              xs: 12,
+              sm: 12,
+              md: 5
+            }}>
+            <Grid size={12}>
               <Paper>
-                <Box mx={2} py={1}>
-                  <Grid container item xs={12}>
+                <Box
+                  sx={{
+                    mx: 2,
+                    py: 1
+                  }}>
+                  <Grid container size={12}>
                     <h2>{repository.language.language}</h2>
                   </Grid>
-                  <Grid item>
-                    <Typography component="span" mb={2} sx={commonStyles.bold}>
+                  <Grid>
+                    <Typography
+                      component="span"
+                      sx={[{
+                        mb: 2
+                      }, commonStyles.bold]}>
                       Média global da linguagem:{" "}
                     </Typography>
                     <Typography component="span">
@@ -318,14 +357,22 @@ const RepositoryView = ({ repository }) => {
                 </Box>
               </Paper>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Paper>
-                <Box mx={2} py={1}>
-                  <Grid container item xs={12}>
+                <Box
+                  sx={{
+                    mx: 2,
+                    py: 1
+                  }}>
+                  <Grid container size={12}>
                     <h2>{repository.owner.owner}</h2>
                   </Grid>
-                  <Grid item>
-                    <Typography component="span" mb={2} sx={commonStyles.bold}>
+                  <Grid>
+                    <Typography
+                      component="span"
+                      sx={[{
+                        mb: 2
+                      }, commonStyles.bold]}>
                       Média do proprietário:{" "}
                     </Typography>
                     <Typography component="span">
@@ -338,9 +385,13 @@ const RepositoryView = ({ repository }) => {
           </Grid>
         )}
         {intervalsChart && (
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Paper>
-              <Box mx={2} py={1}>
+              <Box
+                sx={{
+                  mx: 2,
+                  py: 1
+                }}>
                 <ChartTitle
                   title="Evolução da cobertura"
                   description="Evolução da cobertura de testes deste repositório ao longo do tempo, calculada a partir dos commits nas branches master/main. Os commits são agrupados em intervalos de 4 meses (até 3 por ano) e cada ponto é a média de cobertura (%) dos commits daquele intervalo, ordenados cronologicamente."
@@ -358,9 +409,13 @@ const RepositoryView = ({ repository }) => {
           </Grid>
         )}
         {pullRequestsChart && (
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Paper>
-              <Box mx={2} py={1}>
+              <Box
+                sx={{
+                  mx: 2,
+                  py: 1
+                }}>
                 <ChartTitle
                   title="Pull Requests"
                   description="Cobertura de testes dos últimos pull requests mesclados deste repositório, comparando a branch BASE (antes do merge) com a HEAD (depois do merge). Cada par de barras é um pull request, identificado pelo número na Codecov."

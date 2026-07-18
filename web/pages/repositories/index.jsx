@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  alpha,
   Box,
   Chip,
   InputBase,
@@ -18,7 +17,7 @@ import {
 } from "@mui/material";
 import { getServerClient } from "../../src/api/coverit";
 import { useRouter } from "next/router";
-import styled from "@emotion/styled";
+import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 
 import useCommonStyles from "../../src/hooks/useCommonStyles";
@@ -128,11 +127,13 @@ const RepositoryList = ({
   const router = useRouter();
   const commonStyles = useCommonStyles();
   const [searchInput, setSearchInput] = React.useState(search);
+  const [prevSearch, setPrevSearch] = React.useState(search);
   const searchDebounce = React.useRef(null);
 
-  React.useEffect(() => {
+  if (search !== prevSearch) {
+    setPrevSearch(search);
     setSearchInput(search);
-  }, [search]);
+  }
 
   function pushQuery(nextQuery) {
     router.push({
@@ -178,14 +179,14 @@ const RepositoryList = ({
   }
 
   return (
-    <Box mt={2}>
+    <Box sx={{
+      mt: 2
+    }}>
       <Stack
         direction="row"
         spacing={2}
-        alignItems="center"
-        flexWrap="wrap"
         useFlexGap
-        sx={{ mb: 2 }}
+        sx={{ alignItems: "center", flexWrap: "wrap", mb: 2 }}
       >
         <Search sx={{ flexGrow: 1, maxWidth: 320 }}>
           <SearchIconWrapper>
