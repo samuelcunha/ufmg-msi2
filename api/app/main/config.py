@@ -15,7 +15,9 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
         "pool_recycle": 280,
-        "pool_size": 100
+        "pool_size": 10,
+        "max_overflow": 5,
+        "connect_args": {"connect_timeout": 5}
     }
     ERROR_404_HELP = False
     use_reloader=False
@@ -36,7 +38,9 @@ class ProductionConfig(Config):
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
         "pool_recycle": 280,
-        "pool_size": 100
+        "pool_size": 10,
+        "max_overflow": 5,
+        "connect_args": {"connect_timeout": 5}
     }
     ERROR_404_HELP = False
     use_reloader=False
