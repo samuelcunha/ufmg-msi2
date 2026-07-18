@@ -1,7 +1,7 @@
 from app.main.service.coverage_service import get_pull_requests
 from app.main.service.repository_service import get_one_by_id
 from app.main.util.dto import CoverageDto
-from app.main.service.coverage_service import get_one_by_language, get_all_by_language, get_all_by_owner, get_one_by_owner, get_all_by_interval
+from app.main.service.coverage_service import get_one_by_language, get_all_by_language, get_all_by_owner, get_one_by_owner, get_all_by_interval, get_by_repository_and_interval
 from flask_restx import Resource
 
 api = CoverageDto.api
@@ -71,10 +71,12 @@ class CoverageInfoRepository(Resource):
         owner = get_one_by_owner(repository.owner)
         language = get_one_by_language(repository.main_language)
         pull_requests = get_pull_requests(repository)
+        intervals = get_by_repository_and_interval(repository.id)
 
         return {
             'repository': repository,
             'owner': owner,
             'language': language,
-            'pull_requests': pull_requests
+            'pull_requests': pull_requests,
+            'intervals': intervals
         }

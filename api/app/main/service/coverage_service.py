@@ -74,6 +74,20 @@ def get_all_by_interval():
     return interval_coverage
 
 
+def get_by_repository_and_interval(repo_id):
+    interval_coverage = db.session.query(
+        Commit.interval,
+        func.avg(Commit.coverage).label('coverage'),
+        func.count(Commit.interval).label('count')
+    ).filter(
+        Commit.repository_id == repo_id,
+        Commit.branch.in_(['master', 'main'])
+    ).group_by(Commit.interval
+               ).order_by(func.min(Commit.timestamp)
+                          ).all()
+    return interval_coverage
+
+
 def get_pull_requests(repo):
     pull_requests = PullRequest.query.filter(
         PullRequest.repository_id == repo.id

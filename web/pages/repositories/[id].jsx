@@ -125,12 +125,65 @@ const buildPullRequestsChart = (pullRequests) => {
   };
 };
 
+const getMinCoverage = (data) => Math.min(...data.map((item) => item.coverage));
+const getMaxCoverage = (data) => Math.max(...data.map((item) => item.coverage));
+
+const buildIntervalsChart = (intervals) => ({
+  series: [
+    {
+      name: "Cobertura",
+      data: intervals.map((interval) => `${interval?.coverage.toFixed(2)}%`),
+    },
+  ],
+  options: {
+    chart: {
+      height: 350,
+      type: "line",
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    legend: {
+      show: false,
+    },
+    stroke: {
+      curve: "straight",
+    },
+    xaxis: {
+      categories: intervals.map((interval) => interval.interval),
+      title: {
+        text: "Intervalo",
+        offsetY: -15,
+      },
+      labels: {
+        rotateAlways: true,
+      },
+    },
+    yaxis: {
+      title: {
+        text: "% Cobertura",
+      },
+      min: getMinCoverage(intervals) - 5,
+      max: getMaxCoverage(intervals) + 5,
+      tickAmount: 4,
+    },
+    fill: {
+      opacity: 1,
+    },
+  },
+});
+
 const RepositoryView = ({ repository }) => {
   const commonStyles = useCommonStyles();
   const hasPullRequests = !!repository.pull_requests?.length;
   const pullRequestsChart = React.useMemo(
     () => (hasPullRequests ? buildPullRequestsChart(repository.pull_requests) : null),
     [hasPullRequests, repository.pull_requests]
+  );
+  const hasIntervals = !!repository.intervals?.length;
+  const intervalsChart = React.useMemo(
+    () => (hasIntervals ? buildIntervalsChart(repository.intervals) : null),
+    [hasIntervals, repository.intervals]
   );
 
   const getUpdatedDate = (dateString) => {
@@ -282,6 +335,26 @@ const RepositoryView = ({ repository }) => {
                 </Box>
               </Paper>
             </Grid>
+          </Grid>
+        )}
+        {intervalsChart && (
+          <Grid item xs={12}>
+            <Paper>
+              <Box mx={2} py={1}>
+                <ChartTitle
+                  title="Evolução da cobertura"
+                  description="Evolução da cobertura de testes deste repositório ao longo do tempo, calculada a partir dos commits nas branches master/main. Os commits são agrupados em intervalos de 4 meses (até 3 por ano) e cada ponto é a média de cobertura (%) dos commits daquele intervalo, ordenados cronologicamente."
+                />
+                <div id="chart">
+                  <ReactApexChart
+                    options={intervalsChart.options}
+                    series={intervalsChart.series}
+                    type="line"
+                    height={350}
+                  />
+                </div>
+              </Box>
+            </Paper>
           </Grid>
         )}
         {pullRequestsChart && (

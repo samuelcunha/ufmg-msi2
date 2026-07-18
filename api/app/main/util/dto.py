@@ -77,5 +77,6 @@ class CoverageDto:
         'repository': fields.Nested(RepositoryDto.repository_list),
         'language': fields.Nested(language_coverage),
         'pull_requests': fields.Nested(pull_request),
-        'owner': fields.Nested(owner_coverage)
+        'owner': fields.Nested(owner_coverage),
+        'intervals': fields.List(fields.Nested(interval_coverage))
     })
