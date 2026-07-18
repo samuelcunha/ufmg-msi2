@@ -52,6 +52,7 @@ def process_repository(app, repo_id):
                     if find_commits(repo):
                         set_repository_processed(repo)
         except Exception as error:
+            db.session.rollback()
             set_repository_with_error(repo, str(error))
             print("Repository error: ", error)
         finally:

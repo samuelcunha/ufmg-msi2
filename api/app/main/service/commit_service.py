@@ -2,6 +2,7 @@
 from app.main.api.codecov import Codecov
 from app.main.model.commit import Commit
 from app.main.service.db import insert_ignore_many
+from app.main import db
 from dateutil import parser
 import os
 
@@ -45,5 +46,6 @@ def find_commits(repo):
     try:
         insert_ignore_many(Commit, data)
     except Exception as error:
+        db.session.rollback()
         print(error)
     return True
