@@ -24,6 +24,9 @@ services:
       - ./api/.env
     ports:
       - "5001:5000"
+    volumes:
+      - ./api:/app
+    command: uwsgi --ini /app/wsgi.ini --py-autoreload=1
     depends_on:
       db:
         condition: service_healthy
