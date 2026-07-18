@@ -5,10 +5,12 @@ import {
   IconButton,
   Paper,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import dynamic from "next/dynamic";
 import React from "react";
+import { useRouter } from "next/router";
 import { getServerClient } from "../src/api/coverit";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -66,7 +68,7 @@ export async function getServerSideProps() {
 const getMinCoverage = (data) => Math.min(...data.map((item) => item.coverage));
 const getMaxCoverage = (data) => Math.max(...data.map((item) => item.coverage));
 
-const buildLanguagesChart = (languages, onRendered) => ({
+const buildLanguagesChart = (languages, onRendered, onSelect) => ({
   series: [
     {
       data: languages.map((lang) => `${lang?.coverage.toFixed(2)}%`),
@@ -78,6 +80,9 @@ const buildLanguagesChart = (languages, onRendered) => ({
       type: "bar",
       events: {
         mounted: () => onRendered(),
+        dataPointSelection: (event, chartContext, config) => {
+          onSelect(languages[config.dataPointIndex]?.language);
+        },
       },
     },
     plotOptions: {
@@ -116,7 +121,7 @@ const buildLanguagesChart = (languages, onRendered) => ({
   },
 });
 
-const buildOwnersChart = (owners, onRendered) => ({
+const buildOwnersChart = (owners, onRendered, onSelect) => ({
   series: [
     {
       data: owners.map((owner) => `${owner?.coverage.toFixed(2)}%`),
@@ -128,6 +133,9 @@ const buildOwnersChart = (owners, onRendered) => ({
       type: "bar",
       events: {
         mounted: () => onRendered(),
+        dataPointSelection: (event, chartContext, config) => {
+          onSelect(owners[config.dataPointIndex]?.owner);
+        },
       },
     },
     plotOptions: {
@@ -215,16 +223,22 @@ const buildIntervalsChart = (intervals, onRendered) => ({
 });
 
 const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
+  const router = useRouter();
   const [languagesRendered, setLanguagesRendered] = React.useState(false);
   const [ownersRendered, setOwnersRendered] = React.useState(false);
   const [intervalsRendered, setIntervalsRendered] = React.useState(false);
 
+  const goToLanguage = (language) =>
+    language && router.push(`/repositories?language=${encodeURIComponent(language)}`);
+  const goToOwner = (owner) =>
+    owner && router.push(`/repositories?owner=${encodeURIComponent(owner)}`);
+
   const languagesChart = React.useMemo(
-    () => buildLanguagesChart(initialLanguages, () => setLanguagesRendered(true)),
+    () => buildLanguagesChart(initialLanguages, () => setLanguagesRendered(true), goToLanguage),
     [initialLanguages]
   );
   const ownersChart = React.useMemo(
-    () => buildOwnersChart(initialOwners, () => setOwnersRendered(true)),
+    () => buildOwnersChart(initialOwners, () => setOwnersRendered(true), goToOwner),
     [initialOwners]
   );
   const intervalsChart = React.useMemo(
@@ -239,12 +253,23 @@ const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
           <Paper>
             <Box mx={2} py={1}>
               {languagesRendered && (
-                <ChartTitle
-                  title="Cobertura por linguagem"
-                  description="Média de cobertura de testes por linguagem principal dos repositórios processados com sucesso. Cada barra é a média simples da cobertura (%) entre os repositórios daquela linguagem; só entram linguagens com mais de 1 repositório cadastrado, para evitar amostras de tamanho 1."
-                />
+                <>
+                  <ChartTitle
+                    title="Cobertura por linguagem"
+                    description="Média de cobertura de testes por linguagem principal dos repositórios processados com sucesso. Cada barra é a média simples da cobertura (%) entre os repositórios daquela linguagem; só entram linguagens com mais de 1 repositório cadastrado, para evitar amostras de tamanho 1."
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    Clique em uma barra para ver os repositórios dessa linguagem.
+                  </Typography>
+                </>
               )}
-              <Box sx={{ position: "relative", minHeight: 350 }}>
+              <Box
+                sx={{
+                  position: "relative",
+                  minHeight: 350,
+                  "& .apexcharts-bar-area": { cursor: "pointer" },
+                }}
+              >
                 {!languagesRendered && <ChartLoader />}
                 <div id="chart">
                   <ReactApexChart
@@ -264,12 +289,23 @@ const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
           <Paper>
             <Box mx={2} py={1}>
               {ownersRendered && (
-                <ChartTitle
-                  title="Cobertura por proprietário"
-                  description="Média de cobertura de testes agrupada pelo dono/organização do repositório no GitHub. Cada barra é a média simples da cobertura (%) de todos os repositórios cadastrados daquele proprietário, incluindo proprietários com um único repositório."
-                />
+                <>
+                  <ChartTitle
+                    title="Cobertura por proprietário"
+                    description="Média de cobertura de testes agrupada pelo dono/organização do repositório no GitHub. Cada barra é a média simples da cobertura (%) de todos os repositórios cadastrados daquele proprietário, incluindo proprietários com um único repositório."
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    Clique em uma barra para ver os repositórios desse proprietário.
+                  </Typography>
+                </>
               )}
-              <Box sx={{ position: "relative", minHeight: 350 }}>
+              <Box
+                sx={{
+                  position: "relative",
+                  minHeight: 350,
+                  "& .apexcharts-bar-area": { cursor: "pointer" },
+                }}
+              >
                 {!ownersRendered && <ChartLoader />}
                 <div id="chart">
                   <ReactApexChart

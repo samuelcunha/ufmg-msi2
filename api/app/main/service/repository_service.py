@@ -38,14 +38,37 @@ def insert_new_repository(data: Dict[str, str]) -> Tuple[Dict[str, str], int]:
         return response_object, 409
 
 
-def get_all_repositories(page=1, page_size=20, search=None):
+def get_all_repositories(page=1, page_size=20, search=None, language=None, owner=None, status=None, sort=None):
     query = Repository.query
     if search:
         term = '%' + search + '%'
         query = query.filter(
             db.or_(Repository.name.ilike(term), Repository.owner.ilike(term))
         )
-    return query.order_by(Repository.id).paginate(page=page, per_page=page_size, error_out=False)
+    if language:
+        query = query.filter(Repository.main_language == language)
+    if owner:
+        query = query.filter(Repository.owner == owner)
+    if status:
+        query = query.filter(Repository.status == status)
+
+    if sort == 'coverage_asc':
+        query = query.order_by(Repository.coverage.asc())
+    elif sort == 'coverage_desc':
+        query = query.order_by(Repository.coverage.desc())
+    else:
+        query = query.order_by(Repository.id)
+
+    return query.paginate(page=page, per_page=page_size, error_out=False)
+
+
+def get_distinct_languages():
+    rows = db.session.query(Repository.main_language
+                             ).filter(Repository.main_language.isnot(None)
+                                      ).distinct(
+                                      ).order_by(Repository.main_language
+                                                 ).all()
+    return [row[0] for row in rows]
 
 
 def get_one_by_id(id):
