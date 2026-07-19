@@ -30,6 +30,11 @@ def create_app(config_name: str) -> Flask:
     db.init_app(app)
     flask_bcrypt.init_app(app)
 
+    @app.teardown_request
+    def teardown_request(exception=None):
+        if exception:
+            db.session.rollback()
+
     start_scheduler(app)
 
     return app
