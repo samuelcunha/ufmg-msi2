@@ -29,6 +29,14 @@ class RepositoryDto:
     })
 
     
+class HealthDto:
+    api = Namespace('Health', description='Service health', decorators=[cors.crossdomain(origin="*")])
+    health = api.model('Health', {
+        'status': fields.String(description='ok or degraded'),
+        'checks': fields.Raw(description='per-dependency status (ok/error/stopped)')
+    })
+
+
 class CommitDto:
     api = Namespace('Commit', decorators=[cors.crossdomain(origin="*")])
     commit = api.model('commit', {

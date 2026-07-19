@@ -5,6 +5,7 @@ from app.main.model.pull_request import PullRequest
 
 from .main.controller.repository_controller import api as repository_ns
 from .main.controller.coverage_controller import api as coverage_ns
+from .main.controller.health_controller import api as health_ns
 
 blueprint = Blueprint('api', __name__)
 authorizations = {
@@ -26,3 +27,4 @@ api = Api(
 
 api.add_namespace(repository_ns, path='/repository')
 api.add_namespace(coverage_ns, path='/coverage')
+api.add_namespace(health_ns, path='/health')
