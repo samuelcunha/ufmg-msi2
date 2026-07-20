@@ -43,8 +43,9 @@ def get_all_by_owner():
     ).filter(
         Repository.status == RepositoryStatusEnum.SUCCESS
     ).group_by(Repository.owner
-               ).order_by(desc(func.avg(Repository.coverage))
-                          ).all()
+               ).having(func.count(Repository.owner) > 1
+                        ).order_by(desc(func.avg(Repository.coverage))
+                                   ).all()
     return owner_coverage
 
 
