@@ -145,7 +145,7 @@ const buildOwnersChart = (owners, onRendered, onSelect) => ({
       show: false,
     },
     xaxis: {
-      categories: owners.map((pull) => pull.owner),
+      categories: owners.map((owner) => `${owner.owner} (${owner.count})`),
       title: {
         text: "Proprietário",
         offsetY: -15,
@@ -303,7 +303,7 @@ const Home = ({ initialLanguages, initialOwners, initialIntervals }) => {
                 <>
                   <ChartTitle
                     title="Cobertura por proprietário"
-                    description="Média de cobertura de testes agrupada pelo dono/organização do repositório no GitHub. Cada barra é a média simples da cobertura (%) de todos os repositórios cadastrados daquele proprietário, incluindo proprietários com um único repositório."
+                    description="Média de cobertura de testes agrupada pelo dono/organização do repositório no GitHub. Cada barra é a média simples da cobertura (%) de todos os repositórios cadastrados daquele proprietário; só entram proprietários com mais de 1 repositório cadastrado, para evitar amostras de tamanho 1. O número entre parênteses ao lado do nome é a quantidade de repositórios daquele proprietário."
                   />
                   <Typography variant="caption" sx={{
                     color: "text.secondary"
